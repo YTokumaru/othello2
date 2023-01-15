@@ -2,6 +2,7 @@
 #define BOARD
 
 #include "all.hpp"
+#include "position.hpp"
 
 /**Class board is a class used to represent the game board.
  * The class has mainly 3 menbers that get used frequently
@@ -33,6 +34,7 @@
  * 
  * edit(position, colour) changes the colour of the position
  * to the specified one, regardless of the board state.
+ * Unlike place, THIS METHOD CHANGES THE BOARD STATE
  */ 
 
 class board
@@ -47,12 +49,16 @@ public:
     board & operator=(const board &rhs);    // assignment operator
     //~board();
 
-    colour at(const position &pos);
-    board place(const position &pos, colour colr);
+    bool operator==(const board &rhs);
+    bool operator!=(const board &rhs);
+
+    colour at(const position &pos) const;
+    void edit(const position &pos, const colour &clr);
+    board place(const position &pos, const colour &clr);
+    
     
 
     // functions for debugging
-    void validate();                        // Checks that there is only one colour in a tile. Throws an error
-
+    void validate() const;                  // Checks that there is only one colour in a tile. Throws an error
 };
 #endif // BOARD
