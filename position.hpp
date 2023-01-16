@@ -24,8 +24,9 @@ class position
     // check if the position is in bounds
     bool is_inbound();
 
-    bool operator==(const position &rhs);
-    bool operator!=(const position &rhs);
+    bool operator==(const position &rhs) const;
+    bool operator!=(const position &rhs) const;
+    bool operator<(const position &rhs) const;
 
     // The methods below return the positions relative to this
     //does not check for edges

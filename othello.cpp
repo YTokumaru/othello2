@@ -2,6 +2,8 @@
 #include "board.hpp"
 #include "position.hpp"
 #include "io.hpp"
+#include "brain.hpp"
+#include "hard_coded.hpp"
 
 int main(int argc, char **argv)
 {
@@ -24,9 +26,14 @@ int main(int argc, char **argv)
 
     display(myboard);
 
-    myboard = myboard.place(position(5,5), WHITE);
+    // myboard = myboard.place(position(5,5), WHITE);
 
-    display(myboard);
+    // display(myboard);
+
+    // hard_coded evaluator debug
+    hard_coded eval;
+    double score = eval.evaluate(myboard, BLACK);
+    cout << score << '\n';
 
 
     return 0;

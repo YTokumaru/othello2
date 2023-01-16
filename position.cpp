@@ -21,7 +21,7 @@ bool position::is_inbound()
     return false;
 }
 
-bool position::operator==(const position &rhs)
+bool position::operator==(const position &rhs) const
 {
     if ((rhs.col == col) && (rhs.row == row))
     {
@@ -33,7 +33,12 @@ bool position::operator==(const position &rhs)
     }
 }
 
-bool position::operator!=(const position &rhs)
+bool position::operator!=(const position &rhs) const
 {
     return !(position::operator==(rhs));
+}
+
+bool position::operator<(const position &rhs) const
+{
+    return (row+ROW*col) < (rhs.row+ROW*rhs.col);
 }
