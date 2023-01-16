@@ -106,7 +106,7 @@ void board::edit(const position &pos, const colour &clr)
     #endif //DEBUG
 }
 
-board board::place(const position &pos, const colour &clr)
+board board::place(const position &pos, const colour &clr) const
 {
     /**Returns the same board if it cannot be changed*/
     board retboard(*this);
@@ -167,7 +167,7 @@ board board::place(const position &pos, const colour &clr)
             {
                 retboard.edit(pos,clr);
                 // going back to change the board
-                for (position j = i; j != pos; j = j.left())
+                for (position j = i; j != pos; j = j.above())
                 {
                     retboard.edit(j,clr);
                 }
@@ -254,7 +254,7 @@ board board::place(const position &pos, const colour &clr)
             {
                 retboard.edit(pos,clr);
                 // going back to change the board
-                for (position j = i; j != pos; j = j.lower_left())
+                for (position j = i; j != pos; j = j.upper_right())
                 {
                     retboard.edit(j,clr);
                 }
@@ -263,9 +263,9 @@ board board::place(const position &pos, const colour &clr)
         }
     }
 
-    if (retboard.at(pos.lower_left()) == -clr)
+    if (retboard.at(pos.upper_right()) == -clr)
     {
-        for (position i = pos.lower_left().lower_left(); i.is_inbound(); i = i.lower_left())
+        for (position i = pos.upper_right().upper_right(); i.is_inbound(); i = i.upper_right())
         {
             if (!(i.is_inbound()))
             {
@@ -283,7 +283,7 @@ board board::place(const position &pos, const colour &clr)
             {
                 retboard.edit(pos,clr);
                 // going back to change the board
-                for (position j = i; j != pos; j = j.upper_right())
+                for (position j = i; j != pos; j = j.lower_left())
                 {
                     retboard.edit(j,clr);
                 }

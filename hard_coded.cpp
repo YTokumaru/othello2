@@ -1,6 +1,6 @@
 #include "hard_coded.hpp"
 
-double hard_coded::evaluate(const board &b, const colour &clr)
+double hard_coded::evaluate(const board &b, const colour &clr) const
 {
     double b_total = 0;
     double w_total = 0;
@@ -24,6 +24,5 @@ double hard_coded::evaluate(const board &b, const colour &clr)
         }
         
     }
-    return (w_total-b_total)/(w_total+b_total);
-    
+    return (w_total-b_total)/(1+std::abs(w_total-b_total));
 }

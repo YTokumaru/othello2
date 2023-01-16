@@ -83,6 +83,8 @@ const std::map<position, double> SCORE_SHEET_0{
 const std::map<position, double> SCORESHEETS[1] = {
     SCORE_SHEET_0
 };
+
+
 /**Expecting arguments:
  * Name             | About
  * score_sheet      | Number of scoresheet to use
@@ -93,16 +95,16 @@ private:
     const int scoresheet;
 public:
     hard_coded(): scoresheet(0){}
-    // hard_coded(const std::map<string, std::any> &args): scoresheet(std::any_cast<int>(args["score_sheet"])) {};
+    hard_coded(const std::map<string, std::any> &args): scoresheet(std::any_cast<int>(args.at("score_sheet"))) {};
     //~hard_coded();
 
     /**The evaluation method is as follows:
      * Let B be the sum of the score on each black tile.
      * Let W be the sum if the score on each white tile.
      * The score of the board S is given by
-     * S = (W-B)/W+B
+     * S = (W-B)/(1+|W-B|)
     */
-    double evaluate(const board &b, const colour &clr);
+    double evaluate(const board &b, const colour &clr) const;
 };
 
 

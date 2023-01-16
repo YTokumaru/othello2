@@ -63,5 +63,5 @@ void display(const board &b)
     }
     retstr += '\n';
 
-    cout << retstr;
+    cout << retstr << std::endl;
 }

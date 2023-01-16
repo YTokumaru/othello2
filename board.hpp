@@ -54,7 +54,7 @@ public:
 
     colour at(const position &pos) const;
     void edit(const position &pos, const colour &clr);
-    board place(const position &pos, const colour &clr);
+    board place(const position &pos, const colour &clr) const;
     
     
 
