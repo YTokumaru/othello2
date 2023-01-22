@@ -13,7 +13,7 @@ bool verbose = false;
 bool blind = false;
 bool cpu = false;
 bool log = false;
-string log_file("log.txt");
+string log_file;
 string prg_name("");
 
 //TODO: Implement the usage
@@ -50,7 +50,7 @@ char *getOption(char **start, char **end, const string option)
 
 
 /* The Othello game*/
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     prg_name = argv[0];
 
@@ -61,22 +61,27 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if (isOptPresent(argv, argv+argc, "-l") || isOptPresent(argv, argv+argc, "--log"))
+    if (isOptPresent(argv, argv+argc, "-l"))
     {
-        if((getOption(argv, argv+argc, "-l") != nullptr) || (getOption(argv, argv+argc, "--log") != nullptr))
+        string temp = getOption(argv, argv+argc, "-l")? getOption(argv, argv+argc, "-l") : "";
+        if (temp.empty() || temp.at(0) == '-')
         {
-            if ((*getOption(argv, argv+argc, "-l") == '-') || (*getOption(argv, argv+argc, "--log") == '-'))
-            {
-                std::cerr << "Expected an argument after the option \"-l / --log\"\n";
-                return 0;
-            }
-            log_file = getOption(argv, argv+argc, "-l");
+            std::cerr << "Expected a filename after the option \"-l / --log\"\n";
+            return 1;
         }
-        else
+        log = true;
+        log_file = temp;
+    }
+    if (isOptPresent(argv, argv+argc, "--log"))
+    {
+        string temp = getOption(argv, argv+argc, "--log")? getOption(argv, argv+argc, "--log"): "";
+        if (temp.empty() || temp.at(0) == '-')
         {
-            std::cerr << "Expected an argument after the option \"-l / --log\"\n";
-            return 0;
+            std::cerr << "Expected a filename after the option \"-l / --log\"\n";
+            return 1;
         }
+        log = true;
+        log_file = temp;
     }
     
 
@@ -99,7 +104,7 @@ int main(int argc, char **argv)
     /* Display the title screen and the options */
     title(verbose, cpu, blind, log, log_file);
 
-    cout << "\nThe options can be changed at runtime. ./othello -h for more information\n";
+    cout << "\nThe options can be changed at runtime. \"./othello -h\" for more information\n";
     cout << "Do you want to continue? [y/n]";
     char ans;
     std::cin >> ans;
