@@ -1,6 +1,6 @@
 #include "io.hpp"
 
-void title(bool verbose, bool cpu, bool blind, bool log, string log_file)
+void title(bool verbose, bool cpu, bool blind, bool do_log, string log_file, string version)
 {
     cout <<  "\
         THE STRATEGY GAME\n\
@@ -10,16 +10,18 @@ void title(bool verbose, bool cpu, bool blind, bool log, string log_file)
     ████ █  █ █  █ █   █ █       █   █▄▄▄█   █   █   █   █  █ █  █ ████\n\
    █████ █  █▄█  █ █   █ █   ▄   █    ▄▄▄█   █▄▄▄█   █▄▄▄█  █▄█  █ ███\n\
   ██████ █       █ █   █ █  █ █  █   █▄▄▄█       █       █       █ ██\n\
- ███████ █▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█ █\n\n";
+ ███████ █▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█ █\n";
+
+    cout << "Version " << version << "\n\n";
 
     cout << "Game settings:\n";
     if (verbose)
     {
-        cout << "Verbose:   True -      Displaying additional informatioon to console\n";
+        cout << "Verbose:   Enabled -   Displaying additional information to console\n";
     }
     else
     {
-        cout << "Verbose:   False -     No additional information to console\n";
+        cout << "Verbose:   Disabled -  No additional information to console\n";
     }
 
     if (cpu)
@@ -40,7 +42,7 @@ void title(bool verbose, bool cpu, bool blind, bool log, string log_file)
         cout << "Blind:     Disabled -  Board is output to console\n";
     }
 
-    if (log)
+    if (do_log)
     {
         cout << "log:       Enabled -   Output the match to file " << log_file << std::endl;
     }

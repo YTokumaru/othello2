@@ -37,6 +37,9 @@ public:
 
     // returns the optimal solution for a given board state and colour
     position think(const board &b, const colour &clr) const;
+
+    // TODO: Implement a feature that checks whether a piece of a certain colour can be placed on the next move
+    bool placable(const board &b, const colour &clr) const;
 };
 
 

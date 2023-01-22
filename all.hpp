@@ -8,6 +8,9 @@
 #include <any>
 #include <chrono>
 #include <algorithm>
+#include <unistd.h>
+#include <fstream>
+#include <filesystem>
 
 #define DEBUG
 
@@ -15,6 +18,7 @@
 using std::string;
 using std::cout;
 using std::to_string;
+
 
 //Colour Schemes:
 typedef int8_t colour;
