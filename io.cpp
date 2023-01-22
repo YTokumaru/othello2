@@ -1,5 +1,58 @@
 #include "io.hpp"
 
+void title(bool verbose, bool cpu, bool blind, bool log, string log_file)
+{
+    cout <<  "\
+        THE STRATEGY GAME\n\
+       █  ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄     ▄▄▄     ▄▄▄▄▄▄▄  ███████\n\
+      ██ █       █       █  █ █  █       █   █   █   █   █       █ ██████\n\
+     ███ █   ▄   █▄     ▄█  █▄█  █    ▄▄▄█   █   █   █   █   ▄   █ █████\n\
+    ████ █  █ █  █ █   █ █       █   █▄▄▄█   █   █   █   █  █ █  █ ████\n\
+   █████ █  █▄█  █ █   █ █   ▄   █    ▄▄▄█   █▄▄▄█   █▄▄▄█  █▄█  █ ███\n\
+  ██████ █       █ █   █ █  █ █  █   █▄▄▄█       █       █       █ ██\n\
+ ███████ █▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█ █\n\n";
+
+    cout << "Game settings:\n";
+    if (verbose)
+    {
+        cout << "Verbose:   True -      Displaying additional informatioon to console\n";
+    }
+    else
+    {
+        cout << "Verbose:   False -     No additional information to console\n";
+    }
+
+    if (cpu)
+    {
+        cout << "CPU:       Enabled -   A player vs CPU match\n";
+    }
+    else
+    {
+        cout << "CPU:       Disabled -  A player vs player match\n";
+    }
+
+    if (blind)
+    {
+        cout << "Blind:     Enabled -   Disabling board output to console\n";
+    }
+    else
+    {
+        cout << "Blind:     Disabled -  Board is output to console\n";
+    }
+
+    if (log)
+    {
+        cout << "log:       Enabled -   Output the match to file " << log_file << std::endl;
+    }
+    else
+    {
+        cout << "log:       Disabled -  The results are not recorded" << std::endl;
+    }
+    
+    
+    
+}
+
 void display(const board &b)
 {
     string retstr   = "";

@@ -6,40 +6,121 @@
 #include "hard_coded.hpp"
 #include "minimax.hpp"
 
+string version = "alpha";
+
+// Command line argumnets
+bool verbose = false;
+bool blind = false;
+bool cpu = false;
+bool log = false;
+string log_file("log.txt");
+string prg_name("");
+
+//TODO: Implement the usage
+void usage()
+{
+    cout << "OTHELLO Program, version: " << version << "\n";
+    cout << "Usage: " << prg_name << " [OPTIONS] file...\n\n";
+    cout << "Brief explanation:\n\n";     //TODO
+    cout << "\
+Option      Long option     Meaning\n\
+-h          --help          Display this usage\n\
+-v          --verbose       Output more information to terminal\n\
+-b          --blind         Disable the board output to terminal\n\
+-c          --cpu           Enables a match against a CPU\n\
+-l [FILE]   --log [FILE]    Specify the log outout\n";
+}
+
+// -c [level]  --cpu [level]   Enables a match against a CPU. Higher the level, the stronger\n";
+
+bool isOptPresent(char **start, char **end, const string option)
+{
+    return std::find(start, end, option) != end;
+}
+
+char *getOption(char **start, char **end, const string option)
+{
+    char **itr = std::find(start, end, option);
+    if (itr != end && ++itr != end)
+    {
+        return *itr;
+    }
+    return nullptr;
+}
+
+
+/* The Othello game*/
 int main(int argc, char **argv)
 {
-    //position debug
-    // position a(2,3);
-    // position b = a.below();
+    prg_name = argv[0];
 
-    // cout << sizeof(position) << "\n" << sizeof(board) << "\n";
-    // cout << unsigned(a.row) << unsigned(a.col) << '\n';
-    // cout << unsigned(b.row) << unsigned(b.col) << std::endl;
+    // Parsing arguments:
+    if(isOptPresent(argv, argv+argc, "-h") || isOptPresent(argv, argv+argc, "--help"))
+    {
+        usage();
+        return 0;
+    }
 
-    // display debug
+    if (isOptPresent(argv, argv+argc, "-l") || isOptPresent(argv, argv+argc, "--log"))
+    {
+        if((getOption(argv, argv+argc, "-l") != nullptr) || (getOption(argv, argv+argc, "--log") != nullptr))
+        {
+            if ((*getOption(argv, argv+argc, "-l") == '-') || (*getOption(argv, argv+argc, "--log") == '-'))
+            {
+                std::cerr << "Expected an argument after the option \"-l / --log\"\n";
+                return 0;
+            }
+            log_file = getOption(argv, argv+argc, "-l");
+        }
+        else
+        {
+            std::cerr << "Expected an argument after the option \"-l / --log\"\n";
+            return 0;
+        }
+    }
+    
+
+    if(isOptPresent(argv, argv+argc, "-v") || isOptPresent(argv, argv+argc, "--verbose"))
+    {
+        verbose = true;
+    }
+
+    if(isOptPresent(argv, argv+argc, "-b") || isOptPresent(argv, argv+argc, "--blind"))
+    {
+        blind = true;
+    }
+
+    if(isOptPresent(argv, argv+argc, "-c") || isOptPresent(argv, argv+argc, "--cpu"))
+    {
+        cpu = true;
+    }
+
+
+    /* Display the title screen and the options */
+    title(verbose, cpu, blind, log, log_file);
+
+    cout << "\nThe options can be changed at runtime. ./othello -h for more information\n";
+    cout << "Do you want to continue? [y/n]";
+    char ans;
+    std::cin >> ans;
+
+    if (ans != 'y')
+    {
+        return 0;
+    }
+    
+
+
+    // Initialize board
     board myboard;
     myboard.edit(position(3,3), WHITE);
     myboard.edit(position(4,4), WHITE);
     myboard.edit(position(3,4), BLACK);
     myboard.edit(position(4,3), BLACK);
 
-    // myboard = myboard.place(position(5,4), BLACK);
-
-
-    // myboard = myboard.place(position(5,5), WHITE);
-
-    // display(myboard);
-
-    // hard_coded evaluator debug
-    // hard_coded eval;
-    // double score = eval.evaluate(myboard, BLACK);
-    // cout << score << '\n';
-
-
-    // Brain debug
-    int depth = 9;
+    // Brain args
     std::map<string, std::any> searcharg = {
-        {"depth",depth}
+        {"depth",5}         // the depth to read until     
     };
     
     int scoresheet_no = 0;
@@ -47,19 +128,10 @@ int main(int argc, char **argv)
         {"score_sheet", scoresheet_no}
     };
 
+    // initialize brain
     brain<minimax<hard_coded>> mybrain(searcharg, evalarg);
 
-
-
-    // position best = mybrain.think(myboard, WHITE);
-    // myboard = myboard.place(best, WHITE);
-    // display(myboard);
-
-    // position pos = mybrain.think(myboard, BLACK);
-    // myboard = myboard.place(pos, BLACK);
-    // display(myboard);
-
-    cout << "CPU vs CPU\n" << "Depth=" << depth << "\nScorescheet no: " << scoresheet_no << "\n";
+    cout << "CPU vs CPU\n" << "Depth=" << 5 << "\nScorescheet no: " << scoresheet_no << "\n";
     display(myboard);
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
