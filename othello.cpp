@@ -31,23 +31,8 @@ Option      Long option     Meaning\n\
 -l [FILE]   --log [FILE]    Specify the log outout\n";
 }
 
-// TODO implement DQN
+// TODO implement Deep Q network
 // -c [level]  --cpu [level]   Enables a match against a CPU. Higher the level, the stronger\n";
-
-bool isOptPresent(char **start, char **end, const string option)
-{
-    return std::find(start, end, option) != end;
-}
-
-char *getOption(char **start, char **end, const string option)
-{
-    char **itr = std::find(start, end, option);
-    if (itr != end && ++itr != end)
-    {
-        return *itr;
-    }
-    return nullptr;
-}
 
 
 /* The Othello game*/
@@ -170,41 +155,23 @@ int main(int argc, char *argv[])
             // Player turn
             if (mybrain.placable(myboard, WHITE) == true)
             {
-                while (true)
+                if(!blind) {display(myboard);}
+                std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
+                position input = userInput(cpu, WHITE, myboard);
+                std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
+
+                myboard = myboard.place(input, WHITE);
+                cout << "White placed at " << int(input.row) <<" "<< int(input.col) << "\n";
+
+                //Display time
+                if (verbose)
                 {
-                    std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
-                    if(!blind) {display(myboard);}
-                    int row, col;
-                    cout << "Player, please input position (white): row column: ";
-                    if (!(std::cin >> row >> col))
-                    {
-                        std::cin.clear();
-                        std::cerr << "\nUnexpected input. Please try agin.\n";
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        continue;
-                    }
-                    if (row < 0 || col < 0 || row > ROW || col > COL)
-                    {
-                        std::cerr << "Position out of bounds. Please try again\n";
-                    }
-                    else if (myboard.place(position(row,col), WHITE) == myboard)
-                    {
-                        std::cerr << "Invalid move. Please try again.\n";
-                    }
-                    else
-                    {
-                        myboard = myboard.place(position(row, col), WHITE);
-                        if(do_log) {logstrm << "WHITE" << ',' << row << ',' << col << std::endl;}
-                        if(verbose) 
-                        {
-                            std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
-                            cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
-                            cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
-                        }
-                        cout << "White placed at " << row <<" "<< col << "\n";
-                        break;
-                    }
+                    cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
+                    cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
                 }
+
+                //log to file
+                if(do_log) {logstrm << "WHITE" << ',' << int(input.row) << ',' << int(input.col) << std::endl;}
             }
             else
             {
@@ -218,7 +185,7 @@ int main(int argc, char *argv[])
             {
                 if(!blind) {display(myboard);}
                 cout << "CPU's turn\n";
-                cout << "Black placed at " << optimal.row <<" "<< optimal.col << "\n";
+                cout << "Black placed at " << int(optimal.row) <<" "<< int(optimal.col) << "\n";
                 if(verbose) 
                 {
                     std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
@@ -243,42 +210,23 @@ int main(int argc, char *argv[])
             // Player turn
             if (mybrain.placable(myboard, WHITE) == true)
             {
-                while (true)
-                {
-                    std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
-                    if(!blind) {display(myboard);}
-                    int row, col;
-                    cout << "Player 1, please input position (white): row column: ";
-                    if (!(std::cin >> row >> col))
-                    {
-                        std::cin.clear();
-                        std::cerr << "Unexpected input. Please try agin.\n";
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        continue;
-                    }
+                if(!blind) {display(myboard);}
+                std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
+                position input = userInput(cpu, WHITE, myboard);
+                std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
 
-                    if (row < 0 || col < 0 || row > ROW || col > COL)
-                    {
-                        std::cerr << "Position out of bounds. Please try again\n";
-                    }
-                    else if (myboard.place(position(row,col), WHITE) == myboard)
-                    {
-                        std::cerr << "Invalid move. Please try again.\n";
-                    }
-                    else
-                    {
-                        cout << "White placed at " << row <<" "<< col << "\n";
-                        if(verbose) 
-                        {
-                            std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
-                            cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
-                            cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
-                        }
-                        if(do_log) {logstrm << "WHITE" << ',' << row << ',' << col << std::endl;}
-                        myboard = myboard.place(position(row, col), WHITE);
-                        break;
-                    }
+                myboard = myboard.place(input, WHITE);
+                cout << "White placed at " << int(input.row) <<" "<< int(input.col) << "\n";
+
+                //Display time
+                if (verbose)
+                {
+                    cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
+                    cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
                 }
+
+                //log to file
+                if(do_log) {logstrm << "WHITE" << ',' << int(input.row) << ',' << int(input.col) << std::endl;}
             }
             else
             {
@@ -288,42 +236,23 @@ int main(int argc, char *argv[])
             // Player2 turn
             if (mybrain.placable(myboard, BLACK) == true)
             {
-                while (true)
-                {
-                    std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
-                    if(!blind) {display(myboard);}
-                    int row, col;
-                    cout << "Player 2, please input position (black): row column: ";
-                    if (!(std::cin >> row >> col))
-                    {
-                        std::cin.clear();
-                        cout << "Unexpected input. Please try agin.\n";
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        continue;
-                    }
+                if(!blind) {display(myboard);}
+                std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
+                position input = userInput(cpu, BLACK, myboard);
+                std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
 
-                    if (row < 0 || col < 0 || row > ROW || col > COL)
-                    {
-                        cout << "Position out of bounds. Please try again\n";
-                    }
-                    else if (myboard.place(position(row,col), BLACK) == myboard)
-                    {
-                        cout << "Invalid move. Please try again.\n";
-                    }
-                    else
-                    {
-                        cout << "Black placed at " << row <<" "<< col << "\n";
-                        if(verbose) 
-                        {
-                            std::chrono::steady_clock::time_point turn_end = std::chrono::steady_clock::now();
-                            cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
-                            cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
-                        }
-                        if(do_log) {logstrm << "BLACK," << row << ',' << col << std::endl;}
-                        myboard = myboard.place(position(row, col), BLACK);
-                        break;
-                    }
+                myboard = myboard.place(input, BLACK);
+                cout << "White placed at " << int(input.row) <<" "<< int(input.col) << "\n";
+
+                //Display time
+                if (verbose)
+                {
+                    cout << "Turn time =       " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - trurn_start).count() << "[ms]" << std::endl;
+                    cout << "Elapsed time =    " << std::chrono::duration_cast<std::chrono::milliseconds>(turn_end - game_start).count() << "[ms]" << std::endl;
                 }
+
+                //log to file
+                if(do_log) {logstrm << "BLACK" << ',' << int(input.row) << ',' << int(input.col) << std::endl;}
             }
             else
             {

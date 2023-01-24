@@ -1,5 +1,64 @@
 #include "io.hpp"
 
+bool isOptPresent(char **start, char **end, const string option)
+{
+    return std::find(start, end, option) != end;
+}
+
+char *getOption(char **start, char **end, const string option)
+{
+    char **itr = std::find(start, end, option);
+    if (itr != end && ++itr != end)
+    {
+        return *itr;
+    }
+    return nullptr;
+}
+
+position userInput(const bool &cpu, const colour &clr, const board &b)
+{
+
+    // input sanitizing
+    while (true)
+    {
+        // prompt
+        if (cpu)
+        {
+            cout << "Player, please input position (white): row column: ";
+        }
+        else if (clr == WHITE)
+        {
+            cout << "Player 1, please input position (white): row column: ";
+        }
+        else
+        {
+            cout << "Player 2, please input position (black): row column: ";
+        }
+
+        int col, row;
+
+        if (!(std::cin >> row >> col))
+        {
+            std::cin.clear();
+            cout << "Unexpected input. Please try agin.\n";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else if (row < 0 || col < 0 || row > ROW || col > COL)
+        {
+            cout << "Position out of bounds. Please try again\n";
+        }
+        else if (b.place(position(row,col), clr) == b)
+        {
+            cout << "Invalid move. Please try again.\n";
+        }
+        else
+        {
+            return position(row,col);
+        }
+    }
+    
+}
+
 void title(bool verbose, bool cpu, bool blind, bool do_log, string log_file, string version)
 {
     cout <<  "\
