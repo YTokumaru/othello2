@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
         std::filesystem::path log_path(log_file);
         if (std::filesystem::exists(log_path))
         {
-            cout << "File named " << log_file << " already exists. Do you want to overwrite? [y/n]";
+            cout << "File named " << log_file << " already exists. Do you want to modify? [y/n]";
             char ans;
             std::cin >> ans;
             if (ans != 'y')
@@ -176,16 +176,20 @@ int main(int argc, char *argv[])
                     if(!blind) {display(myboard);}
                     int row, col;
                     cout << "Player, please input position (white): row column: ";
-                    std::cin >> row;
-                    std::cin >> col;
-
-                    if (position(row,col).is_inbound() == false)
+                    if (!(std::cin >> row >> col))
                     {
-                        cout << "Position out of bounds. Please try again\n";
+                        std::cin.clear();
+                        std::cerr << "\nUnexpected input. Please try agin.\n";
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
+                    }
+                    if (row < 0 || col < 0 || row > ROW || col > COL)
+                    {
+                        std::cerr << "Position out of bounds. Please try again\n";
                     }
                     else if (myboard.place(position(row,col), WHITE) == myboard)
                     {
-                        cout << "Invalid move. Please try again.\n";
+                        std::cerr << "Invalid move. Please try again.\n";
                     }
                     else
                     {
@@ -245,16 +249,21 @@ int main(int argc, char *argv[])
                     if(!blind) {display(myboard);}
                     int row, col;
                     cout << "Player 1, please input position (white): row column: ";
-                    std::cin >> row;
-                    std::cin >> col;
-
-                    if (position(row,col).is_inbound() == false)
+                    if (!(std::cin >> row >> col))
                     {
-                        cout << "Position out of bounds. Please try again\n";
+                        std::cin.clear();
+                        std::cerr << "Unexpected input. Please try agin.\n";
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
+                    }
+
+                    if (row < 0 || col < 0 || row > ROW || col > COL)
+                    {
+                        std::cerr << "Position out of bounds. Please try again\n";
                     }
                     else if (myboard.place(position(row,col), WHITE) == myboard)
                     {
-                        cout << "Invalid move. Please try again.\n";
+                        std::cerr << "Invalid move. Please try again.\n";
                     }
                     else
                     {
@@ -285,10 +294,15 @@ int main(int argc, char *argv[])
                     if(!blind) {display(myboard);}
                     int row, col;
                     cout << "Player 2, please input position (black): row column: ";
-                    std::cin >> row;
-                    std::cin >> col;
+                    if (!(std::cin >> row >> col))
+                    {
+                        std::cin.clear();
+                        cout << "Unexpected input. Please try agin.\n";
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
+                    }
 
-                    if (position(row,col).is_inbound() == false)
+                    if (row < 0 || col < 0 || row > ROW || col > COL)
                     {
                         cout << "Position out of bounds. Please try again\n";
                     }
@@ -357,36 +371,6 @@ int main(int argc, char *argv[])
         cout << "It's a draw!" << std::endl;
     }
     logstrm.close();
-    
-
-
-    // cout << "CPU vs CPU\n" << "Depth=" << 5 << "\nScorescheet no: " << scoresheet_no << "\n";
-    // display(myboard);
-
-    // std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    // for (int i = 0; i < 30; i++)
-    // {
-    //     cout << "Starting calculations for white...\n";
-    //     std::chrono::steady_clock::time_point w_start = std::chrono::steady_clock::now();
-    //     position pos = mybrain.think(myboard, WHITE);
-    //     myboard = myboard.place(pos, WHITE);
-    //     display(myboard);
-    //     std::chrono::steady_clock::time_point w_done = std::chrono::steady_clock::now();
-    //     cout << "Elapsed time =       " << std::chrono::duration_cast<std::chrono::microseconds>(w_done - w_start).count() << "[µs]" << std::endl;
-    //     cout << "Total elapsed time = " << std::chrono::duration_cast<std::chrono::microseconds>(w_done - begin).count() << "[µs]" << std::endl;
-
-
-    //     cout << "Starting calculations for black...\n";
-    //     std::chrono::steady_clock::time_point b_start = std::chrono::steady_clock::now();
-    //     pos = mybrain.think(myboard, BLACK);
-    //     myboard = myboard.place(pos, BLACK);
-    //     display(myboard);
-    //     std::chrono::steady_clock::time_point b_done = std::chrono::steady_clock::now();
-    //     cout << "Elapsed time =       " << std::chrono::duration_cast<std::chrono::microseconds>(b_done - b_start).count() << "[µs]" << std::endl;
-    //     cout << "Total elapsed time = " << std::chrono::duration_cast<std::chrono::microseconds>(b_done - begin).count() << "[µs]" << std::endl;
-    // }
-    
-    
 
     return 0;
 }
