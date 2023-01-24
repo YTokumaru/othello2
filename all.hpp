@@ -12,7 +12,7 @@
 #include <fstream>
 #include <filesystem>
 
-#define DEBUG
+// #define DEBUG
 
 
 using std::string;

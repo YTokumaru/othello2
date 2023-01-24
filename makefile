@@ -3,7 +3,7 @@
 TARGET = othello
 CXX = g++
 CPPFLAGS = 
-CXXFLAGS = -g3 -Wall --std=c++17
+CXXFLAGS = -O3 -Wall --std=c++17
 
 SRC = othello.cpp board.cpp brain.cpp hard_coded.cpp io.cpp minimax.cpp position.cpp
 OBJ = $(SRC:%.cpp=%.o)
