@@ -132,10 +132,10 @@ int main(int argc, char *argv[])
 
     // Brain args
     std::map<string, std::any> searcharg = {
-        {"depth",5}         // the depth to read until     
+        {"depth",6}         // the depth to read until     
     };
     
-    int scoresheet_no = 0;
+    int scoresheet_no = 1;
     std::map<string, std::any> evalarg = {
         {"score_sheet", scoresheet_no}
     };
@@ -179,12 +179,12 @@ int main(int argc, char *argv[])
             }
 
             // cpu turn
+            cout << "CPU's turn... thinking...\n";
             std::chrono::steady_clock::time_point trurn_start = std::chrono::steady_clock::now();
             position optimal = mybrain.think(myboard, BLACK);
             if (optimal.is_inbound())
             {
                 if(!blind) {display(myboard);}
-                cout << "CPU's turn\n";
                 cout << "Black placed at " << int(optimal.row) <<" "<< int(optimal.col) << "\n";
                 if(verbose) 
                 {
